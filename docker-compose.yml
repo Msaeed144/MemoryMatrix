@@ -1,0 +1,43 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-hamkar}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-hamkar}
+      POSTGRES_DB: ${POSTGRES_DB:-hamkar}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-hamkar} -d ${POSTGRES_DB:-hamkar}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  api:
+    build: ./backend
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-hamkar}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-hamkar}
+      POSTGRES_DB: ${POSTGRES_DB:-hamkar}
+      POSTGRES_HOST: db
+      POSTGRES_PORT: "5432"
+      JWT_SECRET: ${JWT_SECRET:-hamkar-dev-secret-change-me}
+      CORS_ORIGINS: ${CORS_ORIGINS:-https://games.kashefteam.org,http://games.kashefteam.org,http://127.0.0.1:1234,http://localhost:1234}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: web.Dockerfile
+    ports:
+      - "0.0.0.0:1234:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

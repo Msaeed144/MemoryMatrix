@@ -1,0 +1,4 @@
+/* Optional external auth styles — critical styles also inject from auth.js */
+.hamkar-auth-card input::placeholder {
+    color: rgba(3, 7, 30, 0.45);
+}

@@ -1,0 +1,22 @@
+# Dev-only override: live-reload for static files and backend code.
+# Usage:
+#   docker compose -f docker-compose.yml -f compose.dev.yml up -d
+# Production keeps using plain `docker compose up -d --build`
+# (this file is NOT auto-loaded, so deploys are unaffected).
+services:
+  web:
+    volumes:
+      - ./index.html:/usr/share/nginx/html/index.html:ro
+      - ./styles.css:/usr/share/nginx/html/styles.css:ro
+      - ./landing.js:/usr/share/nginx/html/landing.js:ro
+      - ./js:/usr/share/nginx/html/js:ro
+      - ./vendor:/usr/share/nginx/html/vendor:ro
+      - ./assets:/usr/share/nginx/html/assets:ro
+      - ./memory-matrix:/usr/share/nginx/html/memory-matrix:ro
+      - ./on-click:/usr/share/nginx/html/on-click:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+
+  api:
+    volumes:
+      - ./backend/app:/app/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload

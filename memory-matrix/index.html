@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Memory Matrix</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@400;700&display=swap" rel="stylesheet"> -->
+    <!-- <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> -->
+</head>
+<body>
+    <!-- Main Menu Screen -->
+    <div id="mainMenu" class="screen active">
+        <div class="menu-container">
+            <div class="menu-toggle">
+                    <button class="menu-btn" onclick="toggleMenu()" aria-label="Settings">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <div class="logos-container">
+                <div class="logo-wrapper">
+                    <img src="assets/nak_logo.png" alt="NAK Logo">
+                </div>
+                <div class="logo-wrapper">
+                    <img src="assets/images/logo.png" alt="Hamkar Logo">
+                </div>
+            </div>
+            <h1 class="game-title" contenteditable="false">Memory Matrix</h1>
+            
+            <!--
+                <div class="menu-buttons">
+                    <button class="action-btn share-btn" onclick="shareGame()">
+                        <i class="fas fa-share-alt"></i> Share
+                    </button>
+                    <button class="action-btn premium-btn" onclick="showPremium()">
+                        <i class="fas fa-shopping-cart"></i> Premium
+                    </button>
+                    <button class="action-btn rate-btn" onclick="rateGame()">
+                        <i class="fas fa-star"></i> Rate Us
+                    </button>
+                </div>
+            -->
+            
+            <div class="play-button-container">
+                <button class="play-btn" onclick="startGame()">
+                    <div class="play-circle">
+                        <span>Play</span>
+                    </div>
+                </button>
+            </div>
+
+            <button class="main-page-btn" type="button" onclick="showPublicLeaderboard()">
+                Leaderboard
+            </button>
+            
+            <button class="main-page-btn" onclick="window.location.href='../index.html'">
+                <i class="fas fa-home"></i> Main Page
+            </button>
+            
+            <!-- Player Mode Selection -->
+            <div class="player-mode-container">
+                <button class="player-mode-btn active" id="singlePlayerBtn" onclick="selectPlayerMode('single')">
+                    <i class="fas fa-user"></i>
+                    Single Player
+                </button>
+                <button class="player-mode-btn" id="multiPlayerBtn" onclick="selectPlayerMode('multi')">
+                    <i class="fas fa-user-friends"></i>
+                    Multiplayer
+                </button>
+            </div>
+
+            <!-- Difficulty Selection -->
+            <div class="difficulty-selection">
+                <h3 class="selection-title">Difficulty</h3>
+                <div class="difficulty-buttons">
+                    <button class="difficulty-btn" id="easyBtn" onclick="selectDifficulty('easy')">
+                        <i class="fas fa-smile"></i>
+                        Easy
+                    </button>
+                    <button class="difficulty-btn active" id="midBtn" onclick="selectDifficulty('mid')">
+                        <i class="fas fa-meh"></i>
+                        Mid
+                    </button>
+                    <button class="difficulty-btn" id="hardBtn" onclick="selectDifficulty('hard')">
+                        <i class="fas fa-fire"></i>
+                        Hard
+                    </button>
+                    <button class="difficulty-btn" id="impossibleBtn" onclick="selectDifficulty('impossible')">
+                        <i class="fas fa-skull"></i>
+                        Impossible
+                    </button>
+                </div>
+            </div>
+
+            <div class="game-mode-selection">
+                <div class="mode-toggle-container">
+                    <button class="mode-toggle-btn active" id="sequentialMode" onclick="selectGameMode('sequential')">
+                        <i class="fas fa-forward"></i>
+                        Sequential
+                    </button>
+                    <button class="mode-toggle-btn" id="flashMode" onclick="selectGameMode('flash')">
+                        <i class="fas fa-bolt"></i>
+                        Flash
+                    </button>
+                </div>
+                
+                <div class="time-mode-container">
+                    <button class="time-mode-btn" onclick="toggleTimeMode()">
+                        <i class="fas fa-clock"></i>
+                        <span id="timeModeText">Unlimited</span>
+                    </button>
+                    <div class="time-settings" id="timeSettings" style="display: none;">
+                        <button class="time-option" onclick="setTimeLimit(30)">30s</button>
+                        <button class="time-option" onclick="setTimeLimit(60)">1min</button>
+                        <button class="time-option" onclick="setTimeLimit(120)">2min</button>
+                        <button class="time-option" onclick="setTimeLimit(0)">Unlimited</button>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="score-history-btn" onclick="showScoreHistory()">
+                <i class="fas fa-history"></i> Score History
+            </button>
+            
+            <button class="stats-btn" onclick="showGameStatsModal()">
+                <i class="fas fa-chart-bar"></i> Game Statistics
+            </button>
+            
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="gameScreen" class="screen">
+        <div class="game-logos">
+            <img src="assets/nak_logo.png" alt="NAK Logo" class="nak-logo-small">
+            <img src="assets/images/logo.png" alt="Logo" class="game-logo-small">
+        </div>
+        <div class="game-header">
+            <div class="header-controls">
+                <button class="pause-btn" onclick="pauseGame()">
+                    <i class="fas fa-pause"></i>
+                    <img src="assets/settings.png" alt="Settings" class="settings-icon">
+            </div>
+          
+            <div class="header-center">
+                <div class="game-stats">
+                    <div class="stat">
+                        <span class="stat-label">Level</span>
+                        <span id="levelDisplay" class="stat-value">1</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Score</span>
+                        <span id="scoreDisplay" class="stat-value">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Best</span>
+                        <span id="bestScoreDisplay" class="stat-value">0</span>
+                    </div>
+                    <div class="stat" id="timerDisplay" style="display: none;">
+                        <span class="stat-label">Time</span>
+                        <span id="timeRemainingDisplay" class="stat-value">--</span>
+                    </div>
+                    <div class="stat" id="roundTimerStat" style="display: none;">
+                        <span class="stat-label">Round</span>
+                        <span id="roundTimeDisplay" class="stat-value">--</span>
+                    </div>
+                </div>
+                <div id="messageDisplay" class="message"></div>
+            </div>
+        </div>
+        
+        <div class="game-container">
+            <div id="gameGrid" class="game-grid"></div>
+        </div>
+        
+        <div class="game-footer">
+            <div id="roundIndicator" class="round-indicator">
+                Round <span id="currentRound">1</span>
+                <span class="diff-multiplier">Difficulty <span id="diffMultiplier">x1.0</span></span>
+            </div>
+            <div id="difficultyInfo" class="difficulty-info">
+                <span class="diff-item">Grid: <span id="gridInfo">3x3</span></span>
+                <span class="diff-item">Speed: <span id="speedInfo">Normal</span></span>
+                <span class="diff-item">Pattern: <span id="patternInfo">3 cells</span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Multiplayer Game Screen -->
+    <div id="multiplayerScreen" class="screen">
+        <button class="pause-btn-mp" onclick="pauseGame()">
+            <i class="fas fa-pause"></i>
+        </button>
+        
+        <div class="multiplayer-container">
+            <!-- Player 1 (Right) -->
+            <div class="player-side" id="player1Side">
+                <div class="player-header">
+                    <h2 class="player-name">Player 1</h2>
+                    <div class="player-stats">
+                        <div class="stat-mp">
+                            <span class="stat-label">Level</span>
+                            <span id="p1LevelDisplay" class="stat-value">1</span>
+                        </div>
+                        <div class="stat-mp">
+                            <span class="stat-label">Score</span>
+                            <span id="p1ScoreDisplay" class="stat-value">0</span>
+                        </div>
+                        <div class="stat-mp" id="p1TimerDisplay" style="display: none;">
+                            <span class="stat-label">Time</span>
+                            <span id="p1TimeDisplay" class="stat-value">--</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="game-container-mp">
+                    <div id="p1GameGrid" class="game-grid-mp"></div>
+                    <div id="p1Message" class="message-mp"></div>
+                </div>
+                
+                <div class="game-footer-mp">
+                    <div class="round-indicator">
+                        Round <span id="p1Round">1</span>
+                    </div>
+                    <div class="difficulty-info">
+                        <span class="diff-item">Grid: <span id="p1GridInfo">3x3</span></span>
+                        <span class="diff-item">Pattern: <span id="p1PatternInfo">3 cells</span></span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Player 2 (Left) -->
+            <div class="player-side" id="player2Side">
+                <div class="player-header">
+                    <h2 class="player-name">Player 2</h2>
+                    <div class="player-stats">
+                        <div class="stat-mp">
+                            <span class="stat-label">Level</span>
+                            <span id="p2LevelDisplay" class="stat-value">1</span>
+                        </div>
+                        <div class="stat-mp">
+                            <span class="stat-label">Score</span>
+                            <span id="p2ScoreDisplay" class="stat-value">0</span>
+                        </div>
+                        <div class="stat-mp" id="p2TimerDisplay" style="display: none;">
+                            <span class="stat-label">Time</span>
+                            <span id="p2TimeDisplay" class="stat-value">--</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="game-container-mp">
+                    <div id="p2GameGrid" class="game-grid-mp"></div>
+                    <div id="p2Message" class="message-mp"></div>
+                </div>
+                
+                <div class="game-footer-mp">
+                    <div class="round-indicator">
+                        Round <span id="p2Round">1</span>
+                    </div>
+                    <div class="difficulty-info">
+                        <span class="diff-item">Grid: <span id="p2GridInfo">3x3</span></span>
+                        <span class="diff-item">Pattern: <span id="p2PatternInfo">3 cells</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pause Menu -->
+    <div id="pauseMenu" class="modal">
+        <div class="modal-content">
+            <h2>Paused</h2>
+            <button class="menu-option" onclick="resumeGame()">
+                <i class="fas fa-play"></i> Resume
+            </button>
+            <button class="menu-option" onclick="restartGame()">
+                <i class="fas fa-redo"></i> Restart
+            </button>
+            <button class="menu-option" onclick="showSettings()">
+                <i class="fas fa-cog"></i> Settings
+            </button>
+            <button class="menu-option" onclick="backToMenu()">
+                <i class="fas fa-home"></i> Main Menu
+            </button>
+        </div>
+    </div>
+
+    <!-- Settings Menu -->
+    <div id="settingsMenu" class="modal">
+        <div class="modal-content">
+            <h2>Settings</h2>
+            <div class="settings-item">
+                <span>Sound Effects</span>
+                <label class="switch">
+                    <input type="checkbox" id="sfxToggle" checked onchange="toggleSFX()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="settings-item">
+                <span>Music</span>
+                <label class="switch">
+                    <input type="checkbox" id="musicToggle" checked onchange="toggleMusic()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="settings-item">
+                <span>Vibration</span>
+                <label class="switch">
+                    <input type="checkbox" id="vibrationToggle" checked onchange="toggleVibration()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <button class="close-btn" onclick="closeSettings()">Close</button>
+        </div>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="gameOverScreen" class="modal">
+        <div class="modal-content game-over">
+            <h2>Game Over!</h2>
+            <div class="final-stats">
+                <div class="stat-row">
+                    <span>Final Score:</span>
+                    <span id="finalScore">0</span>
+                </div>
+                <div class="stat-row">
+                    <span>Best Score:</span>
+                    <span id="finalBestScore">0</span>
+                </div>
+                <div class="stat-row">
+                    <span>Level Reached:</span>
+                    <span id="finalLevel">1</span>
+                </div>
+            </div>
+            <div class="game-over-buttons">
+                <button class="action-btn" onclick="restartGame()">
+                    <i class="fas fa-redo"></i> Play Again
+                </button>
+                <button class="action-btn" onclick="shareScore()">
+                    <i class="fas fa-share"></i> Share Score
+                </button>
+                <button class="action-btn" onclick="backToMenu()">
+                    <i class="fas fa-home"></i> Menu
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Score History / Leaderboard -->
+    <div id="scoreHistory" class="modal">
+        <div class="modal-content">
+            <h2 id="scoreHistoryTitle">Leaderboard</h2>
+            <div id="scoreList" class="score-list"></div>
+            <button class="close-btn" onclick="closeScoreHistory()">Close</button>
+        </div>
+    </div>
+
+    <!-- Game Statistics -->
+    <div id="gameStatsModal" class="modal">
+        <div class="modal-content stats-modal">
+            <h2>📊 Game Statistics</h2>
+            <div id="gameStatsContent" class="stats-content"></div>
+            <div class="stats-actions">
+                <button class="action-btn" onclick="exportGameLogs()">
+                    <i class="fas fa-download"></i> Export Logs
+                </button>
+                <button class="action-btn" onclick="viewGameStats()">
+                    <i class="fas fa-terminal"></i> View in Console
+                </button>
+                <button class="close-btn" onclick="closeGameStats()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="clickSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=" type="audio/wav">
+    </audio>
+    <audio id="correctSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=" type="audio/wav">
+    </audio>
+    <audio id="wrongSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=" type="audio/wav">
+    </audio>
+    <audio id="bgMusic" loop preload="auto">
+        <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=" type="audio/wav">
+    </audio>
+
+    <script src="../vendor/gsap.min.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="motion.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

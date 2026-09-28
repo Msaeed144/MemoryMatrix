@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hamkar Games</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="ambient" aria-hidden="true">
+        <span class="orb orb-a"></span>
+        <span class="orb orb-b"></span>
+        <span class="orb orb-c"></span>
+    </div>
+
+    <main class="landing-container">
+        <div class="logos-container">
+            <div class="logo-wrapper">
+                <img src="assets/nak_logo.png" alt="NAK Logo">
+            </div>
+            <div class="logo-wrapper">
+                <img src="assets/Hamkar.png" alt="Hamkar Logo">
+            </div>
+        </div>
+
+        <h1 class="main-title">Hamkar Games</h1>
+        <p class="subtitle">Choose your challenge</p>
+        <p class="auth-hint" id="auth-hint">Sign in with your phone to save scores across devices.</p>
+
+        <div class="games-selection">
+            <button type="button" class="game-btn left-btn" data-game="memory-matrix" id="btn-memory-matrix">
+                <div class="game-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7"/>
+                        <rect x="14" y="3" width="7" height="7"/>
+                        <rect x="14" y="14" width="7" height="7"/>
+                        <rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                </div>
+                <h2>Memory Matrix</h2>
+                <p>Watch the pattern, then replay it from memory.</p>
+                <span class="game-cta">Play</span>
+            </button>
+
+            <button type="button" class="game-btn right-btn" data-game="on-click" id="btn-memory-match">
+                <div class="game-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="9"/>
+                        <path d="M12 7v5l3 2"/>
+                    </svg>
+                </div>
+                <h2>Memory Match</h2>
+                <p>Decide if each symbol matches the one before it.</p>
+                <span class="game-cta">Play</span>
+            </button>
+        </div>
+
+        <section class="leaderboard-section" aria-labelledby="leaderboard-heading">
+            <h2 id="leaderboard-heading">Leaderboard</h2>
+            <div class="leaderboard-tabs" role="tablist">
+                <button type="button" class="leaderboard-tab active" data-game="match" role="tab" aria-selected="true">Memory Match</button>
+                <button type="button" class="leaderboard-tab" data-game="matrix" role="tab" aria-selected="false">Memory Matrix</button>
+            </div>
+            <div id="landing-leaderboard" class="landing-leaderboard" role="tabpanel">
+                <p class="leaderboard-empty">Loading…</p>
+            </div>
+        </section>
+
+        <div class="landing-account" id="landing-account" hidden>
+            <p class="landing-account-label" id="landing-account-label"></p>
+            <button type="button" class="landing-signout-btn" id="landing-signout-btn">Sign out</button>
+        </div>
+
+        <footer class="footer-text">
+            <p>© 2026 Hamkar Games</p>
+        </footer>
+    </main>
+
+    <script src="vendor/gsap.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="landing.js"></script>
+</body>
+</html>
