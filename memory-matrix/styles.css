@@ -435,6 +435,7 @@ body::before {
 }
 
 .play-circle::before {
+    cursor: pointer;
     content: '';
     position: absolute;
     inset: -8px;

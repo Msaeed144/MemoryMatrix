@@ -174,6 +174,18 @@
     window.addEventListener("hamkar:auth", updateAuthHint);
     window.addEventListener("hamkar:logout", updateAuthHint);
 
+    // Coming back with the browser Back button restores this page as it was
+    // when we navigated away (mid leave-animation) → put it back on screen.
+    window.addEventListener("pageshow", (event) => {
+        if (!event.persisted) return;
+        leaving = false;
+        gsap.set(
+            ".landing-container, .game-btn, .logo-wrapper, .main-title, .subtitle, .auth-hint, .leaderboard-section, .footer-text",
+            { clearProps: "opacity,visibility,transform" }
+        );
+        playIntro();
+    });
+
     function boot() {
         updateAuthHint();
         setupLeaderboardTabs();

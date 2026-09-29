@@ -190,7 +190,12 @@ document.addEventListener('DOMContentLoaded', () => {
 // Navigation Functions
 function beginGameSession() {
     document.getElementById('mainMenu').classList.remove('active');
-    
+
+    // Browser back should return to the menu instead of leaving the game
+    if (!history.state || !history.state.mmInGame) {
+        history.pushState({ mmInGame: true }, '');
+    }
+
     // Log game start
     logGameStart();
     
@@ -592,7 +597,7 @@ function resumeGame() {
     document.getElementById('pauseMenu').classList.remove('active');
 }
 
-function backToMenu() {
+function backToMenu(fromPopState = false) {
     document.getElementById('gameScreen').classList.remove('active');
     document.getElementById('multiplayerScreen').classList.remove('active');
     document.getElementById('pauseMenu').classList.remove('active');
@@ -605,7 +610,20 @@ function backToMenu() {
     stopMultiplayerTimers();
     
     resetGame();
+
+    // Drop the history entry created when the game session started
+    if (!fromPopState && history.state && history.state.mmInGame) {
+        history.back();
+    }
 }
+
+// Browser back / gesture back → menu (instead of leaving the page)
+window.addEventListener('popstate', () => {
+    const menu = document.getElementById('mainMenu');
+    if (menu && !menu.classList.contains('active')) {
+        backToMenu(true);
+    }
+});
 
 function showSettings() {
     document.getElementById('settingsMenu').classList.add('active');
@@ -2610,7 +2628,7 @@ function updateScoreHistoryDisplay() {
         const item = document.createElement('div');
         item.className = 'score-item';
         const player = entry.playerName || 'Player';
-        const rank = ['🥇', '🥈', '🥉'][index] || `#${index + 1}`;
+        const rank = ['🥇', '🥈', '🥉'][index] || `${index + 1}`;
         item.innerHTML = `
             <div class="flex">
                 <p class="medium-text">${rank} - </p>
